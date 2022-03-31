@@ -50,7 +50,8 @@ public class GlowingBulbs_IterativeFinder {
 
 		switchedOns = new int[totalSwitchedON];
 		switchCounter = new int[totalSwitchedON];
-
+		
+		// Initialize Counters
 		for (int k = 0; k < NUM_SWITCHES; k++) {
 			if (switchIndicators.charAt(k) == '1') {
 				switchedOns[switchedOnIx] = k + 1;
@@ -58,8 +59,11 @@ public class GlowingBulbs_IterativeFinder {
 				switchedOnIx++;
 			}
 		}
+		// Traverse Counters incrementally
 		for (int curBulb = 0; curBulb < kthBulb; curBulb++) {
+			// Get next minimum glowing bulb index
 			curSelVal = min(switchCounter, switchedOnIx);
+			// For selected Bulb Index, go for next multiple
 			increment(curSelVal, switchedOns, switchCounter, switchedOnIx);
 		}
 		long endTime = System.currentTimeMillis();

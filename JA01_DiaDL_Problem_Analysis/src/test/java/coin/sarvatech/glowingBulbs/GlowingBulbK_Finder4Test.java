@@ -9,7 +9,7 @@ import coin.sarvatech.glowingBulbs.utils.GlowingBulbs_IterativeFinder;
 /**
  * Unit test for simple App.
  */
-public class GlowingBulbK_Finder3Test 
+public class GlowingBulbK_Finder4Test 
 {
 	static final String switchesString1 = "0110000000000000000000000000000000000000";
 	static final int KthBulb1 = 5;

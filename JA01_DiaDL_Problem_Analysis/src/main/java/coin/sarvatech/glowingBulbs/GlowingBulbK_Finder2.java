@@ -1,12 +1,11 @@
 package coin.sarvatech.glowingBulbs;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.*;
 
 public class GlowingBulbK_Finder2 {
-	final static int NUM_SWITCHES = 40;
+	final static int MAX_NUM_SWITCHES = 40;
 
 	public static void main(String[] args) {
 		String switchesString1 = "0110000000000000000000000000000000000000";
@@ -25,87 +24,74 @@ public class GlowingBulbK_Finder2 {
 		int result = 0;
 
 		System.out.println("Given Input String = " + switchesString1 + ", Find Bulb Glowing = " + KthBulb1 + "! Expected = " + expectedOut1);
-		result = getKthBulbGlowing(switchesString1, KthBulb1);
+		result = getKthBulbGlowing(MAX_NUM_SWITCHES, switchesString1, KthBulb1);
 		System.out.println("Answer - Index of bulb glowing = " + result);
 		System.out.println("=============");
 		System.out.println("Given Input String = " + switchesString2 + ", Find Bulb Glowing = " + KthBulb2 + "! Expected = " + expectedOut2);
-		result = getKthBulbGlowing(switchesString2, KthBulb2);
+		result =  getKthBulbGlowing(MAX_NUM_SWITCHES, switchesString2, KthBulb2);
 		System.out.println("Answer - Index of bulb glowing = " + result);
 		System.out.println("=============");
 		System.out.println("Given Input String = " + switchesString3 + ", Find Bulb Glowing = " + KthBulb3 + "! Expected = " + expectedOut3);
-		result = getKthBulbGlowing(switchesString3, KthBulb3);
+		result = getKthBulbGlowing(MAX_NUM_SWITCHES, switchesString3, KthBulb3);
 		System.out.println("Answer - Index of bulb glowing = " + result);
 		System.out.println("=============");
 		System.out.println("Given Input String = " + switchesString4 + ", Find Bulb Glowing = " + KthBulb4 + "! Expected = " + expectedOut4);
-		result = getKthBulbGlowing(switchesString4, KthBulb4);
+		result = getKthBulbGlowing(MAX_NUM_SWITCHES, switchesString4, KthBulb4);
 		System.out.println("Answer - Index of bulb glowing = " + result);
 	}
 
-	static int getNextGlowing(int counterArr[], int numCounters) {
-		int selVal = 0;
+    static boolean isBulbIndexFactor(int bulbIndex, int switchedOns[], int switchedOnIx) {
+    	for (int i = 0; i < switchedOnIx; i++) {
+    		if (bulbIndex % switchedOns[i] == 0) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
 
-		if (numCounters <= 0) {
-			return -1; // Error
-		}
-		selVal = counterArr[0];
-		for (int i = 1; i < numCounters; i++) {
-			if (selVal > counterArr[i]) {
-				selVal = counterArr[i];
-			}
-		}
-		return selVal;
-	}
-
-	static void updateSwitchCounters(int curSelVal, int switchedOns[], int switchCounter[], int numCounters) {
-		if (numCounters <= 0) {
-			return; // Error
-		}
-		for (int i = 0; i < numCounters; i++) {
-			if (switchCounter[i] == curSelVal) {
-				switchCounter[i] += switchedOns[i];
-			}
-		}
-	}
-
-	static int getNumOnSwitches(String switchIndicators) {
+	static int getKthBulbGlowing(int max_num_switches, String switchIndicators, int kthBulb) {
+		int switchedOns[] = new int[max_num_switches];
 		int switchedOnIx = 0;
-		
-		for (int i = 0; i < switchIndicators.length(); i++) {
-			if (switchIndicators.charAt(i) == '1') {
-				switchedOnIx++;
-			}
-		}
-		return switchedOnIx;
-	}
-	
-	static int getKthBulbGlowing(String switchIndicators, int kthBulb) {
-		int switchedOns[] = null;
-		int switchGlowCounters[] = null;
-		int switchedOnIx = 0;
-        long startTime = System.currentTimeMillis();
-		final int init_size = getNumOnSwitches(switchIndicators);
 
-		if (init_size == 0) { // Violation - "At least one switch is on"
-			return -1;
-		}
-		switchedOns = new int[init_size];
-		switchGlowCounters = new int[init_size];
-		for (int k = 0; k < switchIndicators.length(); k++) {
+
+		for (int k = 0; k < max_num_switches; k++) {
 			if (switchIndicators.charAt(k) == '1') {
 				switchedOns[switchedOnIx] = k + 1;
-				switchGlowCounters[switchedOnIx] = k + 1;
 				switchedOnIx++;
 			}
 		}
-		int curBulbIndex = 0;
-		for (int curBulb = 0; curBulb < kthBulb; curBulb++) {
-			curBulbIndex = getNextGlowing(switchGlowCounters, switchedOnIx);
-			updateSwitchCounters(curBulbIndex, switchedOns, switchGlowCounters, switchedOnIx);
+		if (switchedOnIx == 0) { // Violation - "At least one switch is on"
+			return -1;
 		}
-		// ending time
-        long endTime = System.currentTimeMillis();
-        System.out.println("### Time Taken - " + (endTime - startTime) + "ms");		
-		return curBulbIndex;
+        // starting time
+        long startTime = System.currentTimeMillis();
+        
+        // Preparation - Why "switchedOns[0] * kthBulb" sufficient?
+        boolean bulbArray[] = new boolean[switchedOns[0] * kthBulb];  // e.g. index for 5'th glowing bulb for switch 2 is 2 * 5
+        // Assume initialized as false
+        
+        for (int i = 0; i < switchedOnIx; i++) {
+        	for (int j = 0; j < kthBulb; j++) {
+        		int bulbArrayIx = switchedOns[i] * (j+1);
+        		if (bulbArrayIx > bulbArray.length) {
+        			break;
+        		}
+        		bulbArray[bulbArrayIx - 1] = true;
+        	}
+        }
+		int glowingBulbIndex = 0; 
+		for (int bulbIndex = 0; bulbIndex < bulbArray.length; bulbIndex++) { // Start with 1'st Prime
+			if (bulbArray[bulbIndex]) {
+				glowingBulbIndex++;
+				if (glowingBulbIndex == kthBulb) {
+					// ending time
+			        long endTime = System.currentTimeMillis();
+			        System.out.println("### Time Taken - " + (endTime - startTime) + "ms");
+					return bulbIndex + 1;
+				}
+			}
+		}
+		return -1;   // Not found
 	}
 }
 
