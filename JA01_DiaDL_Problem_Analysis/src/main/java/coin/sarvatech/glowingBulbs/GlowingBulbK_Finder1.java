@@ -22,7 +22,7 @@ public class GlowingBulbK_Finder1 {
 		int expectedOut4 = 112585;
 		
 		int result = 0;
-
+		
 		System.out.println("Given Input String = " + switchesString1 + ", Find Bulb Glowing = " + KthBulb1 + "! Expected = " + expectedOut1);
 		result = getKthBulbGlowing(MAX_NUM_SWITCHES, switchesString1, KthBulb1);
 		System.out.println("Answer - Index of bulb glowing = " + result);
@@ -53,7 +53,9 @@ public class GlowingBulbK_Finder1 {
 		int switchedOns[] = new int[max_num_switches];
 		int switchedOnIx = 0;
 
-
+		if (kthBulb > (int) Math.pow(2, 15)) {
+			return -1;
+		}
 		for (int k = 0; k < max_num_switches; k++) {
 			if (switchIndicators.charAt(k) == '1') {
 				switchedOns[switchedOnIx] = k + 1;
@@ -65,20 +67,28 @@ public class GlowingBulbK_Finder1 {
 		}
         // starting time
         long startTime = System.currentTimeMillis();
+
+        if (switchedOnIx == 1) {
+	        long endTime = System.currentTimeMillis();
+	        System.out.println("### Time Taken - " + (endTime - startTime) + "ms");
+			return switchedOns[0] * kthBulb;
+		}
+        // ToDo: How to utilize choice of Prime numbered Switches.
         
 		int glowingBulbIndex = 0; 
-		for (int bulbIndex = 2; bulbIndex < Math.pow(10, 15); bulbIndex++) { // Start with 1'st Prime
+
+		  // Start with 1'st Prime ON Switch
+		for (int bulbIndex = switchedOns[0]; bulbIndex <= switchedOns[0] * kthBulb; bulbIndex++) { 
 			if (isBulbIndexFactor(bulbIndex, switchedOns, switchedOnIx)) {
 				glowingBulbIndex++;
 				if (glowingBulbIndex == kthBulb) {
-					// ending time
 			        long endTime = System.currentTimeMillis();
 			        System.out.println("### Time Taken - " + (endTime - startTime) + "ms");
 					return bulbIndex;
 				}
 			}
 		}
-		return -1;   // Not found
+		return -1;
 	}
 }
 

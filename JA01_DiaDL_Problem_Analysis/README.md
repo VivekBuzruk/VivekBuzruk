@@ -23,3 +23,11 @@ mvn exec:java -Dexec.mainClass=coin.sarvatech.glowingBulbs.GlowingBulbK_Finder1
 
 ### mvn test
 > mvn test -Dtest=com.mycompany.AppTest#testMethod
+
+# More about this Chapter
+Check Video 
+## In brief
+You will learn about Problem Analysis to Programming to developing near professional software development.
+- Use of simple Java constructs, very few use of libraries
+- Focus more on evolving application and harvesting program structure from problem description.
+
