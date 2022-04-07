@@ -1,16 +1,12 @@
-# java_Dev_Ops
-## …or create a new repository on the command line
-> echo "# java_Dev_Ops" >> README.md
-> git init
-> git add README.md
-> git commit -m "first commit"
-> git branch -M master
-> git remote add origin https://github.com/VivekBuzruk/java_Dev_Ops.git
-> git push -u origin master
-## …or push an existing repository from the command line
-> git remote add origin https://github.com/VivekBuzruk/java_Dev_Ops.git
-> git branch -M master
-> git push -u origin master
+# Why "Day in a Developer's Life Series" and this Github project
+- Empower Aspiring Professionals & Strengthen their end-2-end Software Application Development Skills.
+- Software Development is not just coding but starts with understanding/ analyzing Problem statement, Architect / Design the solution and then develop quality Software Application.
 
-## …or import code from another repository
-> You can initialize this repository with code from a Subversion, Mercurial, or TFS project.
+> End goal should not be just partial problem solving but end-2-end Software Application Development. Application can be a Batch/ Colnsole application, Desktop application, Web / Mobile Application or even Microservices.
+
+# Importance of Programming Languages and detailed learning
+> Do not just search for the solution and fix the problem. Your programming skills need to be continuously improved. Apart from learning new technologies / concepts, continuously improve programming skills.
+
+We started YouTube channel (Programming Languages and S/W Development)[https://www.youtube.com/playlist?list=PLfSRL7P22zbKk_fgIyRN-Y_hx66lZqn4E] with this intention of making every developer a great Software Engineer too.
+
+### Each directory within this project has a README.md which provides a link to respective YouTube lecture.
