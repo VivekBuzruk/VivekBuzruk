@@ -7,6 +7,6 @@
 # Importance of Programming Languages and detailed learning
 > Do not just search for the solution and fix the problem. Your programming skills need to be continuously improved. Apart from learning new technologies / concepts, continuously improve programming skills.
 
-We started YouTube channel (Programming Languages and S/W Development)[https://www.youtube.com/playlist?list=PLfSRL7P22zbKk_fgIyRN-Y_hx66lZqn4E] with this intention of making every developer a great Software Engineer too.
+We started YouTube channel [Programming Languages and S/W Development](https://www.youtube.com/playlist?list=PLfSRL7P22zbKk_fgIyRN-Y_hx66lZqn4E) with this intention of making every developer a great Software Engineer too.
 
 ### Each directory within this project has a README.md which provides a link to respective YouTube lecture.
