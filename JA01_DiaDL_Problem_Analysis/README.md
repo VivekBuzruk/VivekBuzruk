@@ -6,3 +6,8 @@ You will learn about simple Problem Analysis to Programming to developing near p
 - Use of simple Java constructs, very few use of libraries
 - Focus more on evolving application and harvesting program structure from problem description.
 
+You can import the maven application in any IDE like Eclipse ....
+
+## Executing the Application
+Check maven_notes.md file of project's root directory dev_and_ops.tips.
+
