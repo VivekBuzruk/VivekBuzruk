@@ -1,23 +1,22 @@
 package coin.sarvatech.dAddressBookIndia ;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.File;
-import java.io.Serializable;
 import java.io.PrintWriter;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Vector;
-import java.util.Observable;
 
 /** An object of this class maintains the collection of Person objects that
  *  constitute an address book
  */
-@SuppressWarnings("deprecation")
-public class AddressBook extends Observable implements Serializable
+public class AddressBook 
 {
-    
     // The collection of persons is stored in a vector
     private Vector<Person> collection;
+    
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     
     // Other information that must be maintained
     private File file;
@@ -31,6 +30,7 @@ public class AddressBook extends Observable implements Serializable
         collection = new Vector<Person>();
         file = null;
         changedSinceLastSave = false;
+        // setupTests();
     }
     
     public String[] getAddressEntryFields() {
@@ -46,6 +46,14 @@ public class AddressBook extends Observable implements Serializable
     	return collection.listIterator();
     }
     
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        this.pcs.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        this.pcs.removePropertyChangeListener(listener);
+    }
+    
     /** Provide a list of the the names of all the persons in the collection
      *
      *  @return an array of Strings, each representing the name of one person
@@ -58,10 +66,6 @@ public class AddressBook extends Observable implements Serializable
         return result;
     }
     
-//    public Vector<Person> getAll()
-//    {
-//    	return collection;
-//    }
     
     /** Add a new Person to the collection
      *
@@ -92,10 +96,17 @@ public class AddressBook extends Observable implements Serializable
                                          phone,
                                          email));
         changedSinceLastSave = true;
-        setChanged();
-        notifyObservers();
+
+        this.pcs.firePropertyChange("collection", null, collection);
     }
     
+	public void addPerson(Person newPerson) {
+		collection.addElement(newPerson);
+		changedSinceLastSave = true;
+		
+		this.pcs.firePropertyChange("collection", null, collection);
+	}
+
     /** Provide current information about a person
      *
      *  @param name the desired name
@@ -146,8 +157,8 @@ public class AddressBook extends Observable implements Serializable
         {
             collection.elementAt(index).update(address, city, state, pincode, phone, email);
             changedSinceLastSave = true;
-            setChanged();
-            notifyObservers();
+
+            this.pcs.firePropertyChange("collection", null, collection);
         }
         else
             throw new IllegalArgumentException("No such person");
@@ -166,8 +177,9 @@ public class AddressBook extends Observable implements Serializable
         {
             collection.removeElementAt(index);
             changedSinceLastSave = true;
-            setChanged();
-            notifyObservers();
+
+            this.pcs.firePropertyChange("collection", null, collection);
+
         }
         else
             throw new IllegalArgumentException("No such person");
@@ -179,8 +191,9 @@ public class AddressBook extends Observable implements Serializable
     {
         Collections.sort(collection, new Person.CompareByName());
         changedSinceLastSave = true;
-        setChanged();
-        notifyObservers();
+
+        this.pcs.firePropertyChange("collection", null, collection);
+
     }
 
     /** Sort the collection by Pincode
@@ -189,8 +202,9 @@ public class AddressBook extends Observable implements Serializable
     {
         Collections.sort(collection, new Person.CompareByPincode());
         changedSinceLastSave = true;
-        setChanged();
-        notifyObservers();
+
+        this.pcs.firePropertyChange("collection", null, collection);
+
     }
     
     /** Search the collection for a person matching given criteria

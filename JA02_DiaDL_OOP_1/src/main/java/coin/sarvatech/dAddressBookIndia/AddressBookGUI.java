@@ -2,6 +2,9 @@ package coin.sarvatech.dAddressBookIndia;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import javax.swing.*;
 import java.util.Observer;
 import java.util.Observable;
@@ -9,7 +12,7 @@ import java.util.Observable;
 /** An object of this class allows interaction between the program and the 
  *  human user.
  */
-public class AddressBookGUI extends JFrame implements Observer
+public class AddressBookGUI extends JFrame implements PropertyChangeListener //, Observer
 {
     // GUI components and menu items
     
@@ -201,8 +204,7 @@ public class AddressBookGUI extends JFrame implements Observer
                }
                 catch(Exception exception)
                 {
-                    reportError("Problem writing the file: " +
-                                 exception);
+                    reportError("Problem writing the file: " + exception);
                 } 
             }
         });
@@ -322,8 +324,9 @@ public class AddressBookGUI extends JFrame implements Observer
     public void setAddressBook(AddressBook addressBook)
     {
         this.addressBook = addressBook;
-        addressBook.addObserver(this);
-        update(addressBook, null);
+        addressBook.addPropertyChangeListener(this);
+
+        updateListView();
     }
     
     /** Report an error to the user
@@ -372,30 +375,35 @@ public class AddressBookGUI extends JFrame implements Observer
                     modifiers);
     }                                      
         
-    /** Method required by the Observer interface - update the display
+    /** Method required by the Listener interface - update the display
      *  in response to any change in the address book
      */
-    public void update(Observable o, Object arg)
-    {
-        if (o == addressBook)
-        {
-            int currentIndex = nameList.getSelectedIndex();
+
+    private void updateListView() {
+        int currentIndex = nameList.getSelectedIndex();
+        
+        nameListContents.removeAllElements();
+        String [] names = addressBook.getNames();
+        for (int i = 0; i < names.length; i ++)
+            nameListContents.addElement(names[i]);
+        
+        if (currentIndex >= 0)
+            nameList.ensureIndexIsVisible(currentIndex);
+        else
+            nameList.ensureIndexIsVisible(nameListContents.getSize() - 1);
             
-            nameListContents.removeAllElements();
-            String [] names = addressBook.getNames();
-            for (int i = 0; i < names.length; i ++)
-                nameListContents.addElement(names[i]);
-            
-            if (currentIndex >= 0)
-                nameList.ensureIndexIsVisible(currentIndex);
-            else
-                nameList.ensureIndexIsVisible(nameListContents.getSize() - 1);
-                
-            nameList.repaint();
-            
-            setTitle(addressBook.getTitle());
-            saveItem.setEnabled(addressBook.getChangedSinceSaved());
-            findAgainItem.setEnabled(false);
-        }
-    } 
+        nameList.repaint();
+        
+        setTitle(addressBook.getTitle());
+        saveItem.setEnabled(addressBook.getChangedSinceSaved());
+        findAgainItem.setEnabled(false);
+    }
+    
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		// TODO Auto-generated method stub
+		if(evt.getPropertyName().equalsIgnoreCase("collection")) {
+			updateListView();
+		}
+	} 
 }

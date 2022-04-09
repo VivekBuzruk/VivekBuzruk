@@ -14,10 +14,6 @@ import javax.swing.JFileChooser;
  */
 public class AddressBookController
 {
-    // Set up for the the dialog box
-    // private static String [] fieldNames = { "First Name", "Last Name", "Address", 
-    //                       "City", "State", "Pincode", "Phone", "Email" };
-    
     // Possible return values for Save Changes
     
     private static boolean PROCEED = true;
@@ -215,7 +211,7 @@ public class AddressBookController
 		if (chooser.showOpenDialog(gui) == JFileChooser.APPROVE_OPTION)
 		{
 			File toOpen = chooser.getSelectedFile();
-			gui.setAddressBook(fileSystem.readFile(toOpen));
+			gui.setAddressBook(fileSystem.readPersonsFile(toOpen));
 		}
      }
 
@@ -230,7 +226,7 @@ public class AddressBookController
             return doSaveAs();
         else
         {
-            fileSystem.saveFile(gui.getAddressBook(), file);
+            fileSystem.saveFile(gui.getAddressBook(), gui.getAddressBook().getAddressEntriesIterator(), file);
             return true;
         }
     }
@@ -245,7 +241,7 @@ public class AddressBookController
         if (chooser.showSaveDialog(gui) == JFileChooser.APPROVE_OPTION)
         {
             File saveTo = chooser.getSelectedFile();
-            fileSystem.saveFile(gui.getAddressBook(), saveTo);
+            fileSystem.saveFile(gui.getAddressBook(), gui.getAddressBook().getAddressEntriesIterator(), saveTo);
             return true;
         }
         else

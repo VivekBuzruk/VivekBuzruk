@@ -25,36 +25,53 @@ public class FileSystem
      *             an AddressBook, and the class it does contain is not
      *             found - this should never happen
      */
-    public AddressBook readFile(File file) throws IOException, 
-                                                  ClassNotFoundException
-    {
-        ObjectInputStream stream = 
-            new ObjectInputStream(new FileInputStream(file));
-        AddressBook result = (AddressBook) stream.readObject();
-        result.setFile(file);
-        result.setUnchangedSinceLastSave();
-        defaultDirectory = file.getParent();
-        return result;
-    }
-    
+	public AddressBook readPersonsFile(File file) throws IOException, ClassNotFoundException {
+		AddressBook newAddressBook = new AddressBook();
+		boolean cont = true;
+		try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file))) {
+			while (cont) {
+				Person result = (Person) stream.readObject();
+				if (result != null) {
+					newAddressBook.addPerson(result);
+				} else {
+					cont = false;
+				}
+			}
+		} catch (EOFException e) {
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		newAddressBook.setFile(file);
+		newAddressBook.setUnchangedSinceLastSave();
+		defaultDirectory = file.getParent();
+
+		return newAddressBook;
+	}
+
     /** Save an address book to a file
      *
      *  @param addressBook the AddressBook to save
+     *  @param myAddressBookEntries Person list
      *  @param file the file specification for the file to create
      *
      *  @exception IOException if there is a problem writing the file
      */
-    public void  saveFile(AddressBook addressBook, File file) throws IOException
+    public void  saveFile(AddressBook addressBook, ListIterator <Person> myAddressBookEntries, File file) throws IOException
     {
         ObjectOutputStream stream = 
             new ObjectOutputStream(new FileOutputStream(file));
-        stream.writeObject(addressBook);
+        while (myAddressBookEntries.hasNext()) {
+            Person myAddressBookEntry = myAddressBookEntries.next();
+
+            stream.writeObject(myAddressBookEntry);
+         }
+        stream.close();
         addressBook.setFile(file);
         addressBook.setUnchangedSinceLastSave();
         defaultDirectory = file.getParent();
     }
-
-    
+   
     /** Save an address book to CSV file
      *
      *  @param addressBook the AddressBook to save
@@ -64,9 +81,7 @@ public class FileSystem
      */
     public void  saveCSVFile(String[] headerNames, ListIterator <Person> myAddressBookEntries, File file) throws IOException
     {
-    	//     private static String [] fieldNames = { "First Name", "Last Name", "Address", 
-        //                                             "City", "State", "Pincode", "Phone", "Email" };
-        // create FileWriter object with file as parameter
+       // create FileWriter object with file as parameter
         FileWriter outputfile = new FileWriter(file);
   
         // create CSVWriter object filewriter object as parameter
